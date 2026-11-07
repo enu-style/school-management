@@ -15,11 +15,12 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-slate-100">
-      <header className="bg-white shadow px-6 py-3 flex flex-wrap justify-between items-center gap-3">
+      <header className="print:hidden bg-white shadow px-6 py-3 flex flex-wrap justify-between items-center gap-3">
         <div className="flex flex-wrap items-center gap-6">
           <h1 className="text-xl font-bold">School Management</h1>
           <nav className="flex flex-wrap gap-2">
             <NavLink to="/announcements" className={linkClass}>
+            <NavLink to="/report-card" className={linkClass}>Report Card</NavLink>
               Announcements
             </NavLink>
             {user.role === "student" && (
