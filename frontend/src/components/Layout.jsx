@@ -61,10 +61,18 @@ export default function Layout() {
                 </NavLink>
               </>
             )}
+            {user.role === "admin" && (
+              <NavLink to="/reset-password" className={linkClass}>
+                Reset Password
+              </NavLink>
+            )}
           </nav>
         </div>
         <div className="flex items-center gap-4">
           <span className="text-sm text-slate-500 capitalize">{user.role}</span>
+          <NavLink to="/change-password" className={linkClass}>
+            My Password
+          </NavLink>
           <button
             onClick={logout}
             className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
