@@ -11,7 +11,7 @@ export default function Layout() {
   }
 
   const linkClass = ({ isActive }) =>
-    `px-3 py-2 rounded ${isActive ? 'bg-blue-600 text-white' : 'text-slate-700 hover:bg-slate-200'}`
+    `px-2 py-1 text-sm rounded ${isActive ? 'bg-blue-600 text-white' : 'text-slate-700 hover:bg-slate-200'}`
 
   return (
     <div className="min-h-screen bg-slate-100">
