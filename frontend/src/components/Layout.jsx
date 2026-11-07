@@ -19,6 +19,7 @@ export default function Layout() {
         <div className="flex flex-wrap items-center gap-6">
           <h1 className="text-xl font-bold">School Management</h1>
           <nav className="flex flex-wrap gap-2">
+            {staff && <NavLink to="/overview" className={linkClass}>Dashboard</NavLink>}
             <NavLink to="/announcements" className={linkClass}>
             <NavLink to="/report-card" className={linkClass}>Report Card</NavLink>
               Announcements

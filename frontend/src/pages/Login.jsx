@@ -17,7 +17,7 @@ export default function Login() {
       const res = await api.post('/auth/login', { email, password })
       localStorage.setItem('token', res.data.token)
       localStorage.setItem('user', JSON.stringify(res.data.user))
-      navigate('/dashboard')
+      navigate(res.data.user.role === 'student' ? '/dashboard' : '/overview')
     } catch (err) {
       setError(err.response?.data?.error || 'Cannot connect to the server')
     } finally {

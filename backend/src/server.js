@@ -20,6 +20,7 @@ const reportRoutes = require('./routes/reports');
 const announcementRoutes = require('./routes/announcements');
 const passwordRoutes = require('./routes/password');
 const cardRoutes = require('./routes/card');
+const statsRoutes = require('./routes/stats');
 
 // Refuse to start with a missing or weak JWT secret
 if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 16) {
@@ -72,6 +73,7 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/announcements', announcementRoutes);
 app.use('/api/password', passwordRoutes);
 app.use('/api/card', cardRoutes);
+app.use('/api/stats', statsRoutes);
 
 app.get('/', (req, res) => {
   res.send('School Management API is running');
