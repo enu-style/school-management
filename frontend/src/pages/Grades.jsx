@@ -70,7 +70,7 @@ export default function Grades() {
   const inputClass = 'border border-slate-300 rounded px-3 py-2'
 
   return (
-    <div className="bg-white p-6 rounded shadow">
+    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
       <h2 className="text-lg font-semibold mb-4">Enter Grades</h2>
 
       {message && <p className="bg-green-100 text-green-700 p-3 rounded mb-3">{message}</p>}
@@ -124,7 +124,7 @@ export default function Grades() {
               ))}
             </tbody>
           </table>
-          <button onClick={save} className="mt-6 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded">
+          <button onClick={save} className="mt-6 bg-teal hover:bg-teal/90 text-white px-6 py-2 rounded">
             Save Grades
           </button>
         </>

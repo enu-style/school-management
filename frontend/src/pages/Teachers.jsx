@@ -71,12 +71,12 @@ export default function Teachers() {
   const inputClass = 'w-full border border-slate-300 rounded px-3 py-2'
 
   return (
-    <div className="bg-white p-6 rounded shadow">
+    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold">Teachers</h2>
         <button
           onClick={showForm ? closeForm : () => setShowForm(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          className="bg-navy hover:bg-navy-light text-white px-4 py-2 rounded"
         >
           {showForm ? 'Cancel' : '+ Add Teacher'}
         </button>
@@ -95,7 +95,7 @@ export default function Teachers() {
               <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} className={inputClass} required />
             </>
           )}
-          <button type="submit" className="bg-green-600 hover:bg-green-700 text-white py-2 rounded md:col-span-2">
+          <button type="submit" className="bg-teal hover:bg-teal/90 text-white py-2 rounded md:col-span-2">
             {editingId ? 'Update Teacher' : 'Save Teacher'}
           </button>
         </form>

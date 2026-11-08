@@ -32,7 +32,7 @@ export default function MyResults() {
       {error && <p className="bg-red-100 text-red-700 p-3 rounded">{error}</p>}
 
       {terms.length === 0 && (
-        <div className="bg-white p-6 rounded shadow text-slate-500">No grades yet.</div>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-slate-500">No grades yet.</div>
       )}
 
       {terms.map((term) => {
@@ -47,7 +47,7 @@ export default function MyResults() {
         const totalMax = assessments.reduce((a, x) => a + x.max, 0)
 
         return (
-          <div key={term} className="bg-white p-6 rounded shadow overflow-x-auto">
+          <div key={term} className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
             <h2 className="text-lg font-semibold mb-4">{term}</h2>
             <table className="w-full text-left">
               <thead>
@@ -90,7 +90,7 @@ export default function MyResults() {
         )
       })}
 
-      <div className="bg-white p-6 rounded shadow">
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
         <h2 className="text-lg font-semibold mb-2">My Attendance</h2>
         <p className="text-sm text-slate-600 mb-4">
           Present: {count('present')} | Absent: {count('absent')} | Late: {count('late')}

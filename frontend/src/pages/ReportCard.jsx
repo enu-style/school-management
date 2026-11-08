@@ -44,7 +44,7 @@ export default function ReportCard() {
 
   return (
     <div>
-      <div className="print:hidden bg-white p-6 rounded shadow mb-6">
+      <div className="print:hidden bg-white p-6 rounded-xl shadow-sm border border-slate-200 mb-6">
         <h2 className="text-lg font-semibold mb-4">Report Card</h2>
         {error && <p className="bg-red-100 text-red-700 p-3 rounded mb-3">{error}</p>}
         <div className="flex flex-wrap gap-4">
@@ -73,11 +73,11 @@ export default function ReportCard() {
       </div>
 
       {card && card.noClass && (
-        <p className="bg-white p-6 rounded shadow text-slate-500">This student is not in a class yet.</p>
+        <p className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-slate-500">This student is not in a class yet.</p>
       )}
 
       {card && !card.noClass && (
-        <div className="bg-white p-8 rounded shadow overflow-x-auto">
+        <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
           <div className="text-center border-b pb-4 mb-4">
             <h1 className="text-2xl font-bold">School Management</h1>
             <p className="text-slate-600">Student Report Card - {card.term}</p>

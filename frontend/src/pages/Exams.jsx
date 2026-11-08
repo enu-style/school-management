@@ -51,7 +51,7 @@ export default function Exams() {
   const inputClass = 'w-full border border-slate-300 rounded px-3 py-2'
 
   return (
-    <div className="bg-white p-6 rounded shadow">
+    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
       <h2 className="text-lg font-semibold mb-4">Assessments (Exams and Assignments)</h2>
 
       {message && <p className="bg-green-100 text-green-700 p-3 rounded mb-3">{message}</p>}
@@ -64,7 +64,7 @@ export default function Exams() {
           <option>Semester 2</option>
         </select>
         <input name="max_score" type="number" min="1" max="100" step="0.5" placeholder="Max marks" value={form.max_score} onChange={handleChange} className={inputClass} required />
-        <button type="submit" className="bg-green-600 hover:bg-green-700 text-white py-2 rounded">+ Add</button>
+        <button type="submit" className="bg-teal hover:bg-teal/90 text-white py-2 rounded">+ Add</button>
       </form>
 
       {terms.map((term) => {

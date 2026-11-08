@@ -58,7 +58,7 @@ export default function Assignments() {
   const inputClass = 'w-full border border-slate-300 rounded px-3 py-2'
 
   return (
-    <div className="bg-white p-6 rounded shadow">
+    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
       <h2 className="text-lg font-semibold mb-4">Teacher Assignments</h2>
 
       {message && <p className="bg-green-100 text-green-700 p-3 rounded mb-3">{message}</p>}
@@ -83,7 +83,7 @@ export default function Assignments() {
             <option key={t.id} value={t.id}>{t.full_name}</option>
           ))}
         </select>
-        <button type="submit" className="bg-green-600 hover:bg-green-700 text-white py-2 rounded">
+        <button type="submit" className="bg-teal hover:bg-teal/90 text-white py-2 rounded">
           Assign
         </button>
       </form>

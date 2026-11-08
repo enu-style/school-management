@@ -44,7 +44,7 @@ export default function Subjects() {
   }
 
   return (
-    <div className="bg-white p-6 rounded shadow">
+    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
       <h2 className="text-lg font-semibold mb-4">Subjects</h2>
 
       {message && <p className="bg-green-100 text-green-700 p-3 rounded mb-3">{message}</p>}
@@ -58,7 +58,7 @@ export default function Subjects() {
           className="border border-slate-300 rounded px-3 py-2 w-full max-w-xs"
           required
         />
-        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+        <button type="submit" className="bg-navy hover:bg-navy-light text-white px-4 py-2 rounded">
           + Add
         </button>
       </form>

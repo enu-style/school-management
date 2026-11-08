@@ -46,7 +46,7 @@ export default function Announcements() {
   const inputClass = 'w-full border border-slate-300 rounded px-3 py-2'
 
   return (
-    <div className="bg-white p-6 rounded shadow">
+    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
       <h2 className="text-lg font-semibold mb-4">Announcements</h2>
 
       {message && <p className="bg-green-100 text-green-700 p-3 rounded mb-3">{message}</p>}
@@ -56,7 +56,7 @@ export default function Announcements() {
         <form onSubmit={post} className="space-y-3 mb-6 p-4 border rounded bg-slate-50">
           <input placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className={inputClass} required />
           <textarea placeholder="Message" rows="3" value={form.body} onChange={(e) => setForm({ ...form, body: e.target.value })} className={inputClass} required />
-          <button type="submit" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded">Post</button>
+          <button type="submit" className="bg-teal hover:bg-teal/90 text-white px-6 py-2 rounded">Post</button>
         </form>
       )}
 

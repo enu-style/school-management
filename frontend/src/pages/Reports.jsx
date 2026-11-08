@@ -57,7 +57,7 @@ export default function Reports() {
   const totalMax = report ? report.exams.reduce((a, x) => a + x.max_score, 0) : 0
 
   return (
-    <div className="bg-white p-6 rounded shadow overflow-x-auto">
+    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
       <h2 className="text-lg font-semibold mb-4">Reports</h2>
       {error && <p className="bg-red-100 text-red-700 p-3 rounded mb-3">{error}</p>}
 

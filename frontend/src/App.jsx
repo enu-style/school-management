@@ -9,6 +9,7 @@ import Exams from './pages/Exams'
 import Grades from './pages/Grades'
 import Reports from './pages/Reports'
 import Announcements from './pages/Announcements'
+import AuditLog from './pages/AuditLog'
 import Overview from './pages/Overview'
 import ReportCard from './pages/ReportCard'
 import ChangePassword from './pages/ChangePassword'
@@ -47,6 +48,7 @@ export default function App() {
         <Route path="/grades" element={<Grades />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/announcements" element={<Announcements />} />
+        <Route path="/audit" element={<AuditLog />} />
         <Route path="/overview" element={<Overview />} />
         <Route path="/report-card" element={<ReportCard />} />
         <Route path="/change-password" element={<ChangePassword />} />

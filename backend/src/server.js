@@ -21,6 +21,9 @@ const announcementRoutes = require('./routes/announcements');
 const passwordRoutes = require('./routes/password');
 const cardRoutes = require('./routes/card');
 const statsRoutes = require('./routes/stats');
+const statsExtraRoutes = require('./routes/statsExtra');
+const auditRoutes = require('./routes/audit');
+const auditMiddleware = require('./middleware/audit');
 
 // Refuse to start with a missing or weak JWT secret
 if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 16) {
@@ -32,8 +35,14 @@ const app = express();
 app.set('trust proxy', 1);
 
 app.use(helmet());
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173' }));
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "http://localhost:5173",
+  "http://localhost:5174",
+].filter(Boolean);
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json({ limit: '10kb' }));
+app.use('/api', auditMiddleware);
 
 // General limit: 300 requests per 15 minutes per IP
 app.use('/api', rateLimit({
@@ -75,6 +84,8 @@ app.use('/api/announcements', announcementRoutes);
 app.use('/api/password', passwordRoutes);
 app.use('/api/card', cardRoutes);
 app.use('/api/stats', statsRoutes);
+app.use('/api/stats-extra', statsExtraRoutes);
+app.use('/api/audit', auditRoutes);
 
 app.get('/', (req, res) => {
   res.send('School Management API is running');
