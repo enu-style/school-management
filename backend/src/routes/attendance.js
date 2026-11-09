@@ -89,6 +89,17 @@ router.post('/', authenticate, authorize('admin', 'teacher'), async (req, res) =
     if (await classYearClosed(class_id)) {
       return res.status(403).json({ error: 'This academic year is closed. Records are read-only.' })
     }
+    const ids = records.map((r) => r.student_id)
+    if (ids.some((v) => !/^\d+$/.test(String(v)))) {
+      return res.status(400).json({ error: 'Invalid student in the list' })
+    }
+    const own = await pool.query(
+      'SELECT COUNT(*)::int AS n FROM students WHERE class_id = $1::int AND id = ANY($2::int[])',
+      [class_id, ids]
+    )
+    if (own.rows[0].n !== new Set(ids.map(String)).size) {
+      return res.status(400).json({ error: 'Some students are not in this class' })
+    }
     await client.query('BEGIN')
     for (const r of records) {
       await client.query(
