@@ -27,7 +27,7 @@ import {
   Lock,
 } from "lucide-react";
 
-const ALL = ["admin", "teacher", "student"];
+const ALL = ['admin', 'teacher', 'student', 'parent'];
 const STAFF = ["admin", "teacher"];
 
 const groups = [
@@ -58,6 +58,8 @@ const groups = [
         icon: Megaphone,
         roles: ALL,
       },
+      { to: '/children', label: 'My Children', icon: GraduationCap, roles: ['parent'] },
+      { to: '/child-results', label: 'Child Results', icon: Award, roles: ['parent'] },
     ],
   },
   {
@@ -70,6 +72,7 @@ const groups = [
         roles: STAFF,
       },
       { to: "/teachers", label: "Teachers", icon: Users, roles: ["admin"] },
+      { to: '/guardians', label: 'Parents', icon: Users, roles: ['admin'] },
     ],
   },
   {
@@ -137,6 +140,9 @@ const pages = {
   "/change-password": ["My Password", "Change your own password"],
   '/years': ['Academic Years', 'Years, semesters, and their dates'],
   '/promotion': ['Promotion', 'Move students to the next academic year'],
+  '/guardians': ['Parents', 'Parent accounts and the children linked to them'],
+  '/children': ['My Children', 'Your children at a glance'],
+  '/child-results': ['Child Results', 'Grades and attendance of your child'],
 };
 
 export default function Layout() {

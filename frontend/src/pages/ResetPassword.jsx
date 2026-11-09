@@ -1,57 +1,93 @@
-import { useEffect, useState } from 'react'
-import api from '../api'
+import { useEffect, useState } from "react";
+import api from "../api";
+import { useToast, useConfirm } from "../components/Feedback";
+
+const lists = {
+  student: "/students",
+  teacher: "/teachers",
+  guardian: "/guardians",
+};
 
 export default function ResetPassword() {
-  const [type, setType] = useState('student')
-  const [people, setPeople] = useState([])
-  const [id, setId] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [message, setMessage] = useState('')
+  const toast = useToast();
+  const confirm = useConfirm();
+  const [type, setType] = useState("student");
+  const [people, setPeople] = useState([]);
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
-    setId('')
-    setPeople([])
-    const url = type === 'student' ? '/students' : '/teachers'
-    api.get(url)
+    setId("");
+    setPeople([]);
+    api
+      .get(lists[type])
       .then((r) => setPeople(r.data))
-      .catch(() => setError('Could not load the list'))
-  }, [type])
+      .catch(() => toast("Could not load the list", "error"));
+  }, [type]);
 
   const submit = async (e) => {
-    e.preventDefault()
-    setError('')
-    setMessage('')
+    e.preventDefault();
+    const person = people.find((p) => String(p.id) === String(id));
+    const ok = await confirm({
+      title: "Reset password?",
+      message: `${person?.full_name || "This user"} will need the new password to log in.`,
+      confirmText: "Reset",
+    });
+    if (!ok) return;
     try {
-      await api.post('/password/reset', { type, id, new_password: password })
-      setMessage('Password reset. Tell the person their new password.')
-      setPassword('')
+      await api.post("/password/reset", { type, id, new_password: password });
+      toast("Password reset. Tell the person their new password.");
+      setPassword("");
     } catch (err) {
-      setError(err.response?.data?.error || 'Could not reset password')
+      toast(err.response?.data?.error || "Could not reset password", "error");
     }
-  }
+  };
 
-  const inputClass = 'w-full border border-slate-300 rounded px-3 py-2'
+  const inputClass =
+    "w-full border border-slate-300 rounded-lg px-3 py-2 bg-white";
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 max-w-md">
-      <h2 className="text-lg font-semibold mb-4">Reset a User's Password</h2>
-      {message && <p className="bg-green-100 text-green-700 p-3 rounded mb-3">{message}</p>}
-      {error && <p className="bg-red-100 text-red-700 p-3 rounded mb-3">{error}</p>}
-      <form onSubmit={submit} className="space-y-3">
-        <select value={type} onChange={(e) => setType(e.target.value)} className={inputClass}>
-          <option value="student">Student</option>
-          <option value="teacher">Teacher</option>
-        </select>
-        <select value={id} onChange={(e) => setId(e.target.value)} className={inputClass} required>
-          <option value="">Select person</option>
-          {people.map((p) => (
-            <option key={p.id} value={p.id}>{p.full_name} ({p.email})</option>
-          ))}
-        </select>
-        <input type="text" placeholder="New password (8+ characters)" value={password} onChange={(e) => setPassword(e.target.value)} className={inputClass} required />
-        <button type="submit" className="bg-teal hover:bg-teal/90 text-white px-6 py-2 rounded">Reset Password</button>
-      </form>
-    </div>
-  )
+    <form
+      onSubmit={submit}
+      className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 max-w-md space-y-4"
+    >
+      <select
+        value={type}
+        onChange={(e) => setType(e.target.value)}
+        className={inputClass}
+      >
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+        <option value="guardian">Parent</option>
+      </select>
+      <select
+        value={id}
+        onChange={(e) => setId(e.target.value)}
+        className={inputClass}
+        required
+      >
+        <option value="">Select person</option>
+        {people.map((p) => (
+          <option key={p.id} value={p.id}>
+            {p.full_name} ({p.email})
+          </option>
+        ))}
+      </select>
+      <input
+        type="text"
+        minLength={8}
+        placeholder="New password (8+ characters)"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className={inputClass}
+        required
+      />
+      <button
+        type="submit"
+        className="bg-teal text-white px-6 py-2 rounded-lg hover:opacity-90"
+      >
+        Reset password
+      </button>
+    </form>
+  );
 }

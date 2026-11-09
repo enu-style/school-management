@@ -156,3 +156,4 @@ router.get('/me', authenticate, authorize('student'), async (req, res) => {
 })
 
 module.exports = router
+module.exports.buildCard = buildCard

@@ -24,6 +24,8 @@ const statsRoutes = require('./routes/stats');
 const statsExtraRoutes = require('./routes/statsExtra');
 const auditRoutes = require('./routes/audit');
 const yearRoutes = require('./routes/years');
+const guardianRoutes = require('./routes/guardians');
+const parentRoutes = require('./routes/parent');
 const auditMiddleware = require('./middleware/audit');
 
 // Refuse to start with a missing or weak JWT secret
@@ -69,6 +71,7 @@ app.post('/api/auth/login', loginLimiter, validateLogin);
 app.post('/api/auth/register', validateRegister);
 app.post('/api/students', validateNewUser);
 app.post('/api/teachers', validateNewUser);
+app.post('/api/guardians', validateNewUser);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/students', studentRoutes);
@@ -88,6 +91,8 @@ app.use('/api/stats', statsRoutes);
 app.use('/api/stats-extra', statsExtraRoutes);
 app.use('/api/audit', auditRoutes);
 app.use('/api/years', yearRoutes);
+app.use('/api/guardians', guardianRoutes);
+app.use('/api/parent', parentRoutes);
 
 app.get('/', (req, res) => {
   res.send('School Management API is running');

@@ -34,7 +34,7 @@ router.post('/change', authenticate, async (req, res) => {
 // Admin resets a student's or teacher's password
 router.post('/reset', authenticate, authorize('admin'), async (req, res) => {
   const { type, id, new_password } = req.body
-  const tables = { student: 'students', teacher: 'teachers' }
+  const tables = { student: 'students', teacher: 'teachers', guardian: 'guardians' }
   if (!tables[type] || !id) {
     return res.status(400).json({ error: 'type (student or teacher) and id are required' })
   }
