@@ -16,6 +16,8 @@ import ChangePassword from "./pages/ChangePassword";
 import ResetPassword from "./pages/ResetPassword";
 import AcademicYears from "./pages/AcademicYears";
 import Promotion from "./pages/Promotion";
+import Timetable from './pages/Timetable'
+import TimetableSetup from './pages/TimetableSetup'
 import MyResults from "./pages/MyResults";
 import Guardians from "./pages/Guardians";
 import ParentHome from "./pages/ParentHome";
@@ -81,6 +83,8 @@ export default function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/years" element={<AcademicYears />} />
         <Route path="/promotion" element={<Promotion />} />
+        <Route path="/timetable" element={<Timetable />} />
+        <Route path="/timetable-setup" element={<TimetableSetup />} />
         <Route path="/guardians" element={<Guardians />} />
         <Route path="/children" element={<ParentHome />} />
         <Route path="/child-results" element={<ParentResults />} />
