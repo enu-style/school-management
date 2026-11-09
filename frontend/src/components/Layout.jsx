@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import api from "../api";
 import {
   LayoutDashboard,
   Award,
@@ -10,6 +11,8 @@ import {
   BookOpen,
   ClipboardList,
   CalendarCheck,
+  CalendarRange,
+  TrendingUp,
   FileText,
   PenLine,
   BarChart3,
@@ -85,6 +88,8 @@ const groups = [
         icon: CalendarCheck,
         roles: STAFF,
       },
+      { to: '/years', label: 'Academic Years', icon: CalendarRange, roles: ['admin'] },
+      { to: '/promotion', label: 'Promotion', icon: TrendingUp, roles: ['admin'] },
     ],
   },
   {
@@ -130,6 +135,8 @@ const pages = {
   ],
   "/audit": ["Audit Log", "A record of who did what and when"],
   "/change-password": ["My Password", "Change your own password"],
+  '/years': ['Academic Years', 'Years, semesters, and their dates'],
+  '/promotion': ['Promotion', 'Move students to the next academic year'],
 };
 
 export default function Layout() {
@@ -140,7 +147,12 @@ export default function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [closed, setClosed] = useState({});
-  const menuRef = useRef(null);
+  const menuRef = useRef(null)
+  const [year, setYear] = useState(null)
+
+  useEffect(() => {
+    api.get('/years/active').then((r) => setYear(r.data)).catch(() => setYear(null))
+  }, [location.pathname]);
 
   useEffect(() => {
     setMobileOpen(false);
@@ -278,7 +290,7 @@ export default function Layout() {
               )}
             </button>
             <div>
-              <p className="text-xs text-slate-400">Home / {title}</p>
+              <p className="text-xs text-slate-400">Home / {title}{year ? ' | Academic year ' + year.name : ''}</p>
               <h1 className="text-lg font-semibold leading-tight">{title}</h1>
             </div>
           </div>

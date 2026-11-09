@@ -29,7 +29,7 @@ router.get('/', authenticate, authorize('admin', 'teacher'), async (req, res) =>
     const userId = isAdmin ? null : req.user.id
 
     const students = await pool.query(
-      'SELECT COUNT(*)::int AS n FROM students WHERE ($1::int[] IS NULL OR class_id = ANY($1::int[]))',
+      "SELECT COUNT(*)::int AS n FROM students WHERE status = 'active' AND ($1::int[] IS NULL OR class_id = ANY($1::int[]))",
       [classIds]
     )
 
@@ -39,7 +39,7 @@ router.get('/', authenticate, authorize('admin', 'teacher'), async (req, res) =>
     if (isAdmin) {
       teachers = (await pool.query('SELECT COUNT(*)::int AS n FROM teachers')).rows[0].n
       subjects = (await pool.query('SELECT COUNT(*)::int AS n FROM subjects')).rows[0].n
-      classes = (await pool.query('SELECT COUNT(*)::int AS n FROM classes')).rows[0].n
+      classes = (await pool.query("SELECT COUNT(*)::int AS n FROM classes WHERE academic_year_id = (SELECT id FROM academic_years WHERE status = 'active')")).rows[0].n
     }
 
     const att = await pool.query(
@@ -61,7 +61,7 @@ router.get('/', authenticate, authorize('admin', 'teacher'), async (req, res) =>
     )
 
     const maxRow = await pool.query(
-      'SELECT COALESCE(SUM(max_score),0)::float AS total FROM exams WHERE term = $1',
+      "SELECT COALESCE(SUM(max_score),0)::float AS total FROM exams WHERE term = $1 AND academic_year_id = (SELECT id FROM academic_years WHERE status = 'active')",
       [term]
     )
     const totalMax = maxRow.rows[0].total
@@ -72,12 +72,13 @@ router.get('/', authenticate, authorize('admin', 'teacher'), async (req, res) =>
        JOIN exams e ON e.id = g.exam_id
        JOIN students s ON s.id = g.student_id
        WHERE e.term = $1
+         AND e.academic_year_id = (SELECT id FROM academic_years WHERE status = 'active')
          AND ($2::int IS NULL OR EXISTS (
            SELECT 1 FROM class_subjects cs
            JOIN teachers t ON t.id = cs.teacher_id
            WHERE cs.class_id = s.class_id AND cs.subject_id = g.subject_id AND t.user_id = $2::int))
        GROUP BY s.id, g.subject_id
-       HAVING COUNT(*) = (SELECT COUNT(*) FROM exams WHERE term = $1)`,
+       HAVING COUNT(*) = (SELECT COUNT(*) FROM exams WHERE term = $1 AND academic_year_id = (SELECT id FROM academic_years WHERE status = 'active'))`,
       [term, userId]
     )
     const distribution = { A: 0, B: 0, C: 0, D: 0, F: 0 }

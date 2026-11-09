@@ -1,6 +1,7 @@
 const express = require('express')
 const pool = require('../config/db')
 const { authenticate, authorize } = require('../middleware/auth')
+const { classYearClosed } = require('../utils/yearGuard')
 
 const router = express.Router()
 
@@ -88,6 +89,9 @@ router.post('/', authenticate, authorize('admin', 'teacher'), async (req, res) =
       return res.status(403).json({ error: 'This subject is not assigned to you' })
     }
 
+    if (await classYearClosed(class_id)) {
+      return res.status(403).json({ error: 'This academic year is closed. Records are read-only.' })
+    }
     await client.query('BEGIN')
     for (const r of valid) {
       await client.query(

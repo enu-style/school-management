@@ -26,6 +26,10 @@ export default function Grades() {
     setSubjects([])
     setStudents([])
     if (!classId) return
+    setExamId('')
+    api.get('/exams', { params: { class_id: classId } })
+      .then((r) => setExams(r.data))
+      .catch(() => toast('Could not load assessments', 'error'))
     api.get('/grades/subjects', { params: { class_id: classId } })
       .then((r) => setSubjects(r.data))
       .catch((err) => setError(err.response?.data?.error || 'Could not load subjects'))

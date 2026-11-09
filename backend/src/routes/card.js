@@ -26,8 +26,10 @@ async function buildCard(studentId, term) {
   if (!student.class_id) return { student, term, noClass: true }
 
   const exams = (await pool.query(
-    'SELECT id, name, max_score::float AS max_score FROM exams WHERE term = $1 ORDER BY id',
-    [term]
+    `SELECT e.id, e.name, e.max_score::float AS max_score FROM exams e
+     JOIN classes c ON c.academic_year_id = e.academic_year_id
+     WHERE e.term = $1 AND c.id = $2 ORDER BY e.id`,
+    [term, student.class_id]
   )).rows
   const subjects = (await pool.query(
     `SELECT DISTINCT sub.id, sub.name FROM class_subjects cs
@@ -41,7 +43,8 @@ async function buildCard(studentId, term) {
      FROM grades g
      JOIN students s ON s.id = g.student_id
      JOIN exams e ON e.id = g.exam_id
-     WHERE s.class_id = $1 AND e.term = $2`,
+     WHERE s.class_id = $1 AND e.term = $2
+       AND e.academic_year_id = (SELECT academic_year_id FROM classes WHERE id = $1)`,
     [student.class_id, term]
   )).rows
 
@@ -87,8 +90,12 @@ async function buildCard(studentId, term) {
   if (complete) status = percent >= PASS_MARK ? 'Promoted' : 'Repeat'
 
   const att = await pool.query(
-    'SELECT status, COUNT(*)::int AS n FROM attendance WHERE student_id = $1 GROUP BY status',
-    [student.id]
+    `SELECT a.status, COUNT(*)::int AS n FROM attendance a
+     JOIN classes c ON c.id = $2
+     JOIN academic_years y ON y.id = c.academic_year_id
+     WHERE a.student_id = $1 AND a.date BETWEEN y.start_date AND y.end_date
+     GROUP BY a.status`,
+    [student.id, student.class_id]
   )
   const attendance = { present: 0, absent: 0, late: 0 }
   att.rows.forEach((r) => { attendance[r.status] = r.n })

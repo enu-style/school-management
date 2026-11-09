@@ -12,7 +12,7 @@ router.get('/grades', authenticate, authorize('student'), async (req, res) => {
        FROM students s
        JOIN class_subjects cs ON cs.class_id = s.class_id
        JOIN subjects sub ON sub.id = cs.subject_id
-       CROSS JOIN exams e
+       JOIN exams e ON e.academic_year_id = (SELECT academic_year_id FROM classes WHERE id = s.class_id)
        LEFT JOIN grades g ON g.student_id = s.id AND g.subject_id = sub.id AND g.exam_id = e.id
        WHERE s.user_id = $1
        ORDER BY e.term, sub.name, e.id`,

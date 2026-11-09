@@ -15,6 +15,8 @@ import ReportCard from './pages/ReportCard'
 import ChangePassword from './pages/ChangePassword'
 import ResetPassword from './pages/ResetPassword'
 import MyResults from './pages/MyResults'
+import AcademicYears from './pages/AcademicYears'
+import Promotion from './pages/Promotion'
 import Layout from './components/Layout'
 
 function ProtectedRoute({ children }) {
@@ -48,6 +50,8 @@ export default function App() {
         <Route path="/grades" element={<Grades />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/announcements" element={<Announcements />} />
+        <Route path="/years" element={<AcademicYears />} />
+        <Route path="/promotion" element={<Promotion />} />
         <Route path="/audit" element={<AuditLog />} />
         <Route path="/overview" element={<Overview />} />
         <Route path="/report-card" element={<ReportCard />} />

@@ -20,7 +20,7 @@ router.get('/', authenticate, authorize('admin', 'teacher'), async (req, res) =>
     const gender = await pool.query(
       `SELECT COALESCE(gender, 'unknown') AS gender, COUNT(*)::int AS n
        FROM students
-       WHERE ($1::int[] IS NULL OR class_id = ANY($1::int[]))
+       WHERE status = 'active' AND ($1::int[] IS NULL OR class_id = ANY($1::int[]))
        GROUP BY 1`,
       [classIds]
     )
@@ -30,7 +30,7 @@ router.get('/', authenticate, authorize('admin', 'teacher'), async (req, res) =>
        FROM students s
        LEFT JOIN classes c ON c.id = s.class_id
        LEFT JOIN users u ON u.id = s.user_id
-       WHERE ($1::int[] IS NULL OR s.class_id = ANY($1::int[]))
+       WHERE s.status = 'active' AND ($1::int[] IS NULL OR s.class_id = ANY($1::int[]))
        ORDER BY u.created_at DESC NULLS LAST
        LIMIT 5`,
       [classIds]

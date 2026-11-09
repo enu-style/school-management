@@ -26,8 +26,10 @@ router.get('/subject', authenticate, authorize('admin', 'teacher'), async (req, 
       return res.status(403).json({ error: 'This subject is not assigned to you' })
     }
     const exams = await pool.query(
-      'SELECT id, name, max_score::float AS max_score FROM exams WHERE term = $1 ORDER BY id',
-      [term]
+      `SELECT e.id, e.name, e.max_score::float AS max_score FROM exams e
+       JOIN classes c ON c.academic_year_id = e.academic_year_id
+       WHERE e.term = $1 AND c.id = $2 ORDER BY e.id`,
+      [term, class_id]
     )
     const students = await pool.query(
       'SELECT id AS student_id, full_name FROM students WHERE class_id = $1 ORDER BY full_name',
@@ -56,7 +58,12 @@ router.get('/summary', authenticate, authorize('admin'), async (req, res) => {
   const { class_id, term } = req.query
   if (!class_id || !term) return res.status(400).json({ error: 'class_id and term are required' })
   try {
-    const max = await pool.query('SELECT COALESCE(SUM(max_score),0)::float AS total FROM exams WHERE term = $1', [term])
+    const max = await pool.query(
+      `SELECT COALESCE(SUM(e.max_score),0)::float AS total FROM exams e
+       JOIN classes c ON c.academic_year_id = e.academic_year_id
+       WHERE e.term = $1 AND c.id = $2`,
+      [term, class_id]
+    )
     const subjects = await pool.query(
       `SELECT DISTINCT sub.id, sub.name FROM class_subjects cs
        JOIN subjects sub ON sub.id = cs.subject_id
@@ -69,7 +76,7 @@ router.get('/summary', authenticate, authorize('admin'), async (req, res) => {
        FROM students s
        JOIN class_subjects cs ON cs.class_id = s.class_id
        JOIN subjects sub ON sub.id = cs.subject_id
-       LEFT JOIN exams e ON e.term = $2
+       LEFT JOIN exams e ON e.term = $2 AND e.academic_year_id = (SELECT academic_year_id FROM classes WHERE id = $1)
        LEFT JOIN grades g ON g.student_id = s.id AND g.subject_id = sub.id AND g.exam_id = e.id
        WHERE s.class_id = $1
        GROUP BY s.id, s.full_name, sub.id`,

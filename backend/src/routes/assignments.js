@@ -16,6 +16,7 @@ router.get('/', authenticate, authorize('admin'), async (req, res) => {
        JOIN classes c ON cs.class_id = c.id
        JOIN subjects s ON cs.subject_id = s.id
        LEFT JOIN teachers t ON cs.teacher_id = t.id
+       WHERE c.academic_year_id = (SELECT id FROM academic_years WHERE status = 'active')
        ORDER BY CAST(SUBSTRING(c.name FROM '[0-9]+') AS INT), c.section, s.name`
     )
     res.json(result.rows)

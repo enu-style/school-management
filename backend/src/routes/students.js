@@ -20,7 +20,7 @@ router.get(
        FROM students s
        LEFT JOIN classes c ON s.class_id = c.id
        LEFT JOIN users u ON s.user_id = u.id
-       WHERE s.full_name ILIKE $1
+       WHERE s.full_name ILIKE $1 AND s.status = 'active'
        ORDER BY s.full_name`,
         [`%${search}%`],
       );

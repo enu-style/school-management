@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import api from "../api";
 import { useToast, useConfirm } from "../components/Feedback";
+import StudentHistory from '../components/StudentHistory'
 
 const emptyForm = {
   full_name: "",
@@ -490,6 +491,7 @@ export default function Students() {
               <dd>{viewing.email}</dd>
             </div>
           </dl>
+          <StudentHistory studentId={viewing.id} />
         </Modal>
       )}
     </div>

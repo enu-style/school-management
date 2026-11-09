@@ -1,6 +1,7 @@
 const express = require('express')
 const pool = require('../config/db')
 const { authenticate, authorize } = require('../middleware/auth')
+const { classYearClosed } = require('../utils/yearGuard')
 
 const router = express.Router()
 
@@ -23,6 +24,7 @@ router.get('/classes', authenticate, authorize('admin', 'teacher'), async (req, 
     if (req.user.role === 'admin') {
       result = await pool.query(
         `SELECT * FROM classes
+         WHERE academic_year_id = (SELECT id FROM academic_years WHERE status = 'active')
          ORDER BY CAST(SUBSTRING(name FROM '[0-9]+') AS INT), section`
       )
     } else {
@@ -31,7 +33,7 @@ router.get('/classes', authenticate, authorize('admin', 'teacher'), async (req, 
          FROM classes c
          JOIN class_subjects cs ON cs.class_id = c.id
          JOIN teachers t ON cs.teacher_id = t.id
-         WHERE t.user_id = $1
+         WHERE t.user_id = $1 AND c.academic_year_id = (SELECT id FROM academic_years WHERE status = 'active')
          ORDER BY c.name, c.section`,
         [req.user.id]
       )
@@ -83,6 +85,9 @@ router.post('/', authenticate, authorize('admin', 'teacher'), async (req, res) =
   try {
     if (!(await canAccessClass(req.user, class_id))) {
       return res.status(403).json({ error: 'This class is not assigned to you' })
+    }
+    if (await classYearClosed(class_id)) {
+      return res.status(403).json({ error: 'This academic year is closed. Records are read-only.' })
     }
     await client.query('BEGIN')
     for (const r of records) {
