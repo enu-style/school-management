@@ -115,6 +115,7 @@ router.delete("/:id", authenticate, authorize("admin"), async (req, res) => {
     res.json({ message: "Student deleted" });
   } catch (err) {
     console.error(err);
+    if (err.code === '23503') return res.status(400).json({ error: 'This student has financial records and cannot be deleted.' })
     res.status(500).json({ error: "Server error" });
   }
 });

@@ -20,6 +20,13 @@ import MyResults from "./pages/MyResults";
 import Guardians from "./pages/Guardians";
 import ParentHome from "./pages/ParentHome";
 import ParentResults from "./pages/ParentResults";
+import FeeSetup from "./pages/FeeSetup";
+import Invoices from "./pages/Invoices";
+import Payments from "./pages/Payments";
+import FeeReports from "./pages/FeeReports";
+import ReceiptPage from "./pages/ReceiptPage";
+import ParentFees from "./pages/ParentFees";
+import Accountants from "./pages/Accountants";
 import Layout from "./components/Layout";
 
 function ProtectedRoute({ children }) {
@@ -29,19 +36,21 @@ function ProtectedRoute({ children }) {
 
 const currentRole = () => JSON.parse(localStorage.getItem("user") || "{}").role;
 
-// /dashboard: students see their results, parents go to their children, staff see the students list
+// /dashboard: students see their results, parents their children, accountants their invoices, staff the students list
 function Home() {
   const role = currentRole();
   if (role === "student") return <MyResults />;
   if (role === "parent") return <Navigate to="/children" replace />;
+  if (role === "accountant") return <Navigate to="/invoices" replace />;
   return <Students />;
 }
 
-// /overview is the staff dashboard
+// /overview is the staff dashboard, and the login page sends everyone except students there
 function OverviewGate() {
   const role = currentRole();
   if (role === "parent") return <Navigate to="/children" replace />;
   if (role === "student") return <Navigate to="/dashboard" replace />;
+  if (role === "accountant") return <Navigate to="/invoices" replace />;
   return <Overview />;
 }
 
@@ -75,6 +84,13 @@ export default function App() {
         <Route path="/guardians" element={<Guardians />} />
         <Route path="/children" element={<ParentHome />} />
         <Route path="/child-results" element={<ParentResults />} />
+        <Route path="/child-fees" element={<ParentFees />} />
+        <Route path="/fee-setup" element={<FeeSetup />} />
+        <Route path="/invoices" element={<Invoices />} />
+        <Route path="/payments" element={<Payments />} />
+        <Route path="/fee-reports" element={<FeeReports />} />
+        <Route path="/receipt/:id" element={<ReceiptPage />} />
+        <Route path="/accountants" element={<Accountants />} />
       </Route>
     </Routes>
   );

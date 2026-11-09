@@ -24,6 +24,9 @@ const statsRoutes = require('./routes/stats');
 const statsExtraRoutes = require('./routes/statsExtra');
 const auditRoutes = require('./routes/audit');
 const yearRoutes = require('./routes/years');
+const feeRoutes = require('./routes/fees');
+const parentFeeRoutes = require('./routes/parentFees');
+const userRoutes = require('./routes/users');
 const guardianRoutes = require('./routes/guardians');
 const parentRoutes = require('./routes/parent');
 const auditMiddleware = require('./middleware/audit');
@@ -71,6 +74,7 @@ app.post('/api/auth/login', loginLimiter, validateLogin);
 app.post('/api/auth/register', validateRegister);
 app.post('/api/students', validateNewUser);
 app.post('/api/teachers', validateNewUser);
+app.post('/api/users', validateNewUser);
 app.post('/api/guardians', validateNewUser);
 
 app.use('/api/auth', authRoutes);
@@ -91,6 +95,9 @@ app.use('/api/stats', statsRoutes);
 app.use('/api/stats-extra', statsExtraRoutes);
 app.use('/api/audit', auditRoutes);
 app.use('/api/years', yearRoutes);
+app.use('/api/fees', feeRoutes);
+app.use('/api/parent-fees', parentFeeRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/guardians', guardianRoutes);
 app.use('/api/parent', parentRoutes);
 

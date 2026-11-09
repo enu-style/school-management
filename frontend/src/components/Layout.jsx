@@ -25,10 +25,15 @@ import {
   PanelLeftOpen,
   LogOut,
   Lock,
+  Receipt,
+  CreditCard,
+  Settings,
+  Wallet,
 } from "lucide-react";
 
-const ALL = ['admin', 'teacher', 'student', 'parent'];
 const STAFF = ["admin", "teacher"];
+const FIN = ["admin", "accountant"];
+const EVERYONE = ["admin", "teacher", "student", "parent", "accountant"];
 
 const groups = [
   {
@@ -47,19 +52,30 @@ const groups = [
         roles: ["student"],
       },
       {
+        to: "/children",
+        label: "My Children",
+        icon: GraduationCap,
+        roles: ["parent"],
+      },
+      {
+        to: "/child-results",
+        label: "Child Results",
+        icon: Award,
+        roles: ["parent"],
+      },
+      { to: "/child-fees", label: "Fees", icon: Wallet, roles: ["parent"] },
+      {
         to: "/report-card",
         label: "Report Card",
         icon: ScrollText,
-        roles: ALL,
+        roles: ["admin", "teacher", "student", "parent"],
       },
       {
         to: "/announcements",
         label: "Announcements",
         icon: Megaphone,
-        roles: ALL,
+        roles: EVERYONE,
       },
-      { to: '/children', label: 'My Children', icon: GraduationCap, roles: ['parent'] },
-      { to: '/child-results', label: 'Child Results', icon: Award, roles: ['parent'] },
     ],
   },
   {
@@ -72,7 +88,7 @@ const groups = [
         roles: STAFF,
       },
       { to: "/teachers", label: "Teachers", icon: Users, roles: ["admin"] },
-      { to: '/guardians', label: 'Parents', icon: Users, roles: ['admin'] },
+      { to: "/guardians", label: "Parents", icon: Users, roles: ["admin"] },
     ],
   },
   {
@@ -91,8 +107,18 @@ const groups = [
         icon: CalendarCheck,
         roles: STAFF,
       },
-      { to: '/years', label: 'Academic Years', icon: CalendarRange, roles: ['admin'] },
-      { to: '/promotion', label: 'Promotion', icon: TrendingUp, roles: ['admin'] },
+      {
+        to: "/years",
+        label: "Academic Years",
+        icon: CalendarRange,
+        roles: ["admin"],
+      },
+      {
+        to: "/promotion",
+        label: "Promotion",
+        icon: TrendingUp,
+        roles: ["admin"],
+      },
     ],
   },
   {
@@ -104,8 +130,23 @@ const groups = [
     ],
   },
   {
+    title: "Finance",
+    items: [
+      { to: "/invoices", label: "Invoices", icon: Receipt, roles: FIN },
+      { to: "/payments", label: "Payments", icon: CreditCard, roles: FIN },
+      { to: "/fee-setup", label: "Fee Setup", icon: Settings, roles: FIN },
+      { to: "/fee-reports", label: "Fee Reports", icon: BarChart3, roles: FIN },
+    ],
+  },
+  {
     title: "Administration",
     items: [
+      {
+        to: "/accountants",
+        label: "Accountants",
+        icon: Users,
+        roles: ["admin"],
+      },
       {
         to: "/reset-password",
         label: "Reset Password",
@@ -121,28 +162,31 @@ const pages = {
   "/overview": ["Dashboard", "School statistics at a glance"],
   "/dashboard": ["Students", "Add, edit, and search student records"],
   "/teachers": ["Teachers", "Manage teacher accounts"],
+  "/guardians": ["Parents", "Parent accounts and the children linked to them"],
+  "/children": ["My Children", "Your children at a glance"],
+  "/child-results": ["Child Results", "Grades and attendance of your child"],
+  "/child-fees": ["Fees", "Invoices, balances, and receipts"],
   "/subjects": ["Subjects", "Manage the subjects taught at school"],
   "/assignments": [
     "Teacher Assignments",
     "Assign teachers to subjects and classes",
   ],
   "/attendance": ["Attendance", "Record daily attendance by class"],
+  "/years": ["Academic Years", "Years, semesters, and their dates"],
+  "/promotion": ["Promotion", "Move students to the next academic year"],
   "/exams": ["Exams", "Configure assessments and their maximum marks"],
   "/grades": ["Grades", "Enter and update student marks"],
   "/reports": ["Reports", "Totals and letter grades per subject or class"],
   "/report-card": ["Report Card", "View and print student report cards"],
+  "/invoices": ["Invoices", "Fee invoices and their balances"],
+  "/payments": ["Payments", "Every payment and its receipt"],
+  "/fee-setup": ["Fee Setup", "Set the fees for each grade and year"],
+  "/fee-reports": ["Fee Reports", "Collections and outstanding balances"],
+  "/accountants": ["Accountants", "Staff accounts for the finance office"],
   "/announcements": ["Announcements", "School news and notices"],
-  "/reset-password": [
-    "Reset Password",
-    "Set a new password for a student or teacher",
-  ],
+  "/reset-password": ["Reset Password", "Set a new password for a user"],
   "/audit": ["Audit Log", "A record of who did what and when"],
   "/change-password": ["My Password", "Change your own password"],
-  '/years': ['Academic Years', 'Years, semesters, and their dates'],
-  '/promotion': ['Promotion', 'Move students to the next academic year'],
-  '/guardians': ['Parents', 'Parent accounts and the children linked to them'],
-  '/children': ['My Children', 'Your children at a glance'],
-  '/child-results': ['Child Results', 'Grades and attendance of your child'],
 };
 
 export default function Layout() {
@@ -153,11 +197,14 @@ export default function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [closed, setClosed] = useState({});
-  const menuRef = useRef(null)
-  const [year, setYear] = useState(null)
+  const [year, setYear] = useState(null);
+  const menuRef = useRef(null);
 
   useEffect(() => {
-    api.get('/years/active').then((r) => setYear(r.data)).catch(() => setYear(null))
+    api
+      .get("/years/active")
+      .then((r) => setYear(r.data))
+      .catch(() => setYear(null));
   }, [location.pathname]);
 
   useEffect(() => {
@@ -179,10 +226,11 @@ export default function Layout() {
     navigate("/");
   };
 
-  let [title, description] = pages[location.pathname] || [
-    "School Management",
-    "",
-  ];
+  let [title, description] =
+    pages[location.pathname] ||
+    (location.pathname.startsWith("/receipt/")
+      ? ["Receipt", "Payment receipt"]
+      : ["School Management", ""]);
   if (user.role === "student" && location.pathname === "/dashboard") {
     title = "My Results";
     description = "Your grades and attendance";
@@ -296,7 +344,10 @@ export default function Layout() {
               )}
             </button>
             <div>
-              <p className="text-xs text-slate-400">Home / {title}{year ? ' | Academic year ' + year.name : ''}</p>
+              <p className="text-xs text-slate-400">
+                Home / {title}
+                {year ? " | Academic year " + year.name : ""}
+              </p>
               <h1 className="text-lg font-semibold leading-tight">{title}</h1>
             </div>
           </div>
