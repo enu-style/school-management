@@ -12,6 +12,7 @@ import {
   ClipboardList,
   CalendarCheck,
   CalendarRange,
+  LayoutGrid,
   CalendarClock,
   TrendingUp,
   FileText,
@@ -114,6 +115,7 @@ const groups = [
         icon: CalendarRange,
         roles: ["admin"],
       },
+      { to: '/classes', label: 'Grades & Sections', icon: LayoutGrid, roles: ['admin'] },
       {
         to: "/promotion",
         label: "Promotion",
@@ -176,6 +178,7 @@ const pages = {
   ],
   "/attendance": ["Attendance", "Record daily attendance by class"],
   "/years": ["Academic Years", "Years, semesters, and their dates"],
+  '/classes': ['Grades & Sections', 'How many sections each grade has, and how big they are'],
   "/promotion": ["Promotion", "Move students to the next academic year"],
   '/timetable': ['Timetable', 'Weekly lessons by class, teacher, and room'],
   '/timetable-setup': ['Timetable Setup', 'Lesson periods, breaks, and classrooms'],

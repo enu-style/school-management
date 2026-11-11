@@ -15,6 +15,7 @@ import AuditLog from "./pages/AuditLog";
 import ChangePassword from "./pages/ChangePassword";
 import ResetPassword from "./pages/ResetPassword";
 import AcademicYears from "./pages/AcademicYears";
+import Classes from './pages/Classes'
 import Promotion from "./pages/Promotion";
 import Timetable from './pages/Timetable'
 import TimetableSetup from './pages/TimetableSetup'
@@ -82,6 +83,7 @@ export default function App() {
         <Route path="/change-password" element={<ChangePassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/years" element={<AcademicYears />} />
+        <Route path="/classes" element={<Classes />} />
         <Route path="/promotion" element={<Promotion />} />
         <Route path="/timetable" element={<Timetable />} />
         <Route path="/timetable-setup" element={<TimetableSetup />} />
