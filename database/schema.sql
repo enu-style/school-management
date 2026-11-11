@@ -12,3 +12,6 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 );
 CREATE INDEX IF NOT EXISTS idx_audit_created ON audit_logs (created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_audit_entity ON audit_logs (entity);
+
+INSERT INTO public.school_settings (key, value) VALUES ('currency', 'ETB') ON CONFLICT (key) DO NOTHING;
+INSERT INTO public.fee_types (name) VALUES ('Tuition'), ('Registration'), ('Examination') ON CONFLICT (name) DO NOTHING;
